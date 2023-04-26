@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     
-    // MARK: Lifecycle
+    // MARK: Lifecycle-
     
     override func loadView() {
         view = mainView
@@ -26,7 +26,7 @@ class MainViewController: UIViewController {
         
         setup()
         setupBindings()
-        configureButtonActions()
+        configureButtonActions()        
     }
     
     // MARK: - Lifecycle
@@ -36,11 +36,10 @@ class MainViewController: UIViewController {
     }
     
     private func setupBindings() {
-        mainView.loginInput.rx.text.bind(to: viewModel.loginRelay).disposed(by: disposeBag)
-        mainView.emailInput.rx.text.bind(to: viewModel.emailRelay).disposed(by: disposeBag)
+        mainView.loginInput.textField.rx.text.bind(to: viewModel.loginRelay).disposed(by: disposeBag)
+        mainView.emailInput.textField.rx.text.bind(to: viewModel.emailRelay).disposed(by: disposeBag)
         viewModel.isFormValid.bind(to: mainView.submitButton.rx.isEnabled).disposed(by: disposeBag)
-        
-        mainView.loginInput.rx
+        mainView.loginInput.textField.rx
             .controlEvent([.editingDidEnd])
             .asObservable()
             .map { [weak self] in
@@ -48,13 +47,19 @@ class MainViewController: UIViewController {
                 return (
                     self.viewModel.loginIsValidRelay.value
                     ? ""
-                    : NSLocalizedString("incorrectLogin", comment: "incorrect login hint")
+                    : LocalizedStrings.incorrectLogin
                 )
             }
-            .bind(to: mainView.loginHintLabel.rx.text)
+            .map {
+                NSAttributedString(
+                    string: $0,
+                    attributes: [.font: Fonts.hintFont, .foregroundColor: Colors.hintColor]
+                )
+            }
+            .bind(to: mainView.loginInput.hintLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
-        mainView.emailInput.rx
+        mainView.emailInput.textField.rx
             .controlEvent([.editingDidEnd])
             .asObservable()
             .map { [weak self] in
@@ -62,10 +67,16 @@ class MainViewController: UIViewController {
                 return (
                     self.viewModel.emailIsValidRelay.value
                     ? ""
-                    : NSLocalizedString("incorrectEmail", comment: "incorrect email hint")
+                    : LocalizedStrings.incorrectEmail
                 )
             }
-            .bind(to: mainView.emailHintLabel.rx.text)
+            .map {
+                NSAttributedString(
+                    string: $0,
+                    attributes: [.font: Fonts.hintFont, .foregroundColor: Colors.hintColor]
+                )
+            }
+            .bind(to: mainView.emailInput.hintLabel.rx.attributedText)
             .disposed(by: disposeBag)
     }
 }
@@ -78,7 +89,7 @@ extension MainViewController {
     @objc func submitButtonTapped() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.mainView.stateLabel.text = NSLocalizedString("succeeded", comment: "succeeded action")
+            self.mainView.stateLabel.text = LocalizedStrings.succeeded
             debugPrint("the button was pressed")
         }
     }

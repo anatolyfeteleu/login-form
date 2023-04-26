@@ -1,0 +1,16 @@
+/*
+ Localizable (ru).strings
+ FormValidation
+ 
+ Created by Анатолий Фетелеу on 19.04.2023.
+ 
+ */
+
+"incorrectLogin"="Неправильный логин";
+"incorrectEmail"="Неправильный адрес электронной почты";
+"loginInputLabelText"="Логин: ";
+"loginInputPlaceholder"="Введите логин пользователя";
+"emailInputLabelText"="Адрес электронной почты: ";
+"emailInputPlaceholder"="Введите адрес электронной почты";
+"submitButtonTitle"="Отправить";
+"succeeded"="Успешно!";

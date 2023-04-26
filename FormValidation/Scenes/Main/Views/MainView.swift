@@ -12,108 +12,39 @@ import SnapKit
 class MainView: UIView {
     let stateLabel: UILabel = {
         let view = UILabel()
+        view.textAlignment = .center
         return view
     }()
-    
-    let loginInputLabel: UILabel = {
-        let view = UILabel()
-        view.text = NSLocalizedString("loginInputLabelText", comment: "login label text")
-        return view
-    }()
-    
-    let loginInput: UITextField = {
-        let view = UITextField()
-        view.textContentType = .username
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.cornerRadius = 10
-        view.layer.borderWidth = 2
-        view.placeholder = NSLocalizedString("loginInputPlaceholder", comment: "login input placeholder")
-        
-        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width + 15, height: view.frame.height))
-        view.leftView = leftView
-        view.leftViewMode = .always
-        
-        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width + 15, height: view.frame.height))
-        view.rightView = rightView
-        view.rightViewMode = .always
-        return view
-    }()
-    
-    let loginHintLabel: UILabel = {
-        let view = UILabel()
-        view.textColor = .systemYellow
-        return view
-    }()
-    
-    let emailInputLabel: UILabel = {
-        let view = UILabel()
-        view.text = NSLocalizedString("emailInputLabelText", comment: "email label text")
-        return view
-    }()
-    
-    let emailInput: UITextField = {
-        let view = UITextField()
-        view.textContentType = .emailAddress
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.cornerRadius = 10
-        view.layer.borderWidth = 2
-        view.placeholder = NSLocalizedString("emailInputPlaceholder", comment: "email input placeholder")
-        
-        let leftView = UIVisualEffectView(
-            frame: CGRect(x: 0, y: 0, width: view.frame.width + 15, height: view.frame.height)
-        )
-        view.leftView = leftView
-        view.leftViewMode = .always
-        return view
-    }()
-    
-    let emailHintLabel: UILabel = {
-        let view = UILabel()
-        view.textColor = .systemYellow
-        return view
-    }()
-    
-    let VStack: UIStackView = {
+  
+    let vertStackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
-        view.spacing = 35
-        view.alignment = .fill
+        view.spacing = 15
         return view
     }()
+        
+    let loginInput = InputView(
+        placeholderText: LocalizedStrings.loginInputPlaceholder,
+        labelText: LocalizedStrings.loginInputLabelText,
+        hintLabelText: "",
+        textFieldContextType: .username
+    )
     
-    let loginVStack: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = 10
-        view.alignment = .fill
-        return view
-    }()
-    
-    let passwordVStack: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = 10
-        view.alignment = .fill
-        return view
-    }()
+    let emailInput = InputView(
+        placeholderText: LocalizedStrings.emailInputPlaceholder,
+        labelText: LocalizedStrings.emailInputLabelText,
+        hintLabelText: "",
+        textFieldContextType: .emailAddress
+    )
     
     var submitButton: UIButton = {
-        let view = UIButton()
-        view.setTitle(NSLocalizedString("submitButtonTitle", comment: "submit button title"), for: .normal)
+        let view = UIButton(type: .system)
+        view.setTitle(LocalizedStrings.submitButtonTitle, for: .normal)
         view.setTitleColor(.systemGray4, for: .disabled)
         view.setTitleColor(.black, for: .normal)
-        view.layer.cornerRadius = 10
-        view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.black.cgColor
         view.isEnabled = false
         return view
-    }() {
-        didSet {
-            if submitButton.isEnabled {
-                submitButton.backgroundColor = .systemGreen
-            }
-        }
-    }
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -131,66 +62,38 @@ class MainView: UIView {
         backgroundColor = .white
     }
     
+    // MARK: - Setup views
+    
     private func setupViews() {
-        addSubview(stateLabel)
-        addSubview(VStack)
-        addSubview(loginVStack)
-        addSubview(passwordVStack)
+        addSubview(vertStackView)
+        vertStackView.addArrangedSubview(stateLabel)
+        vertStackView.addArrangedSubview(loginInput)
+        vertStackView.addArrangedSubview(emailInput)
+        vertStackView.addArrangedSubview(submitButton)
         
-        VStack.addArrangedSubview(loginVStack)
-        VStack.addArrangedSubview(passwordVStack)
-        VStack.addArrangedSubview(submitButton)
-        
-        loginVStack.addArrangedSubview(loginInputLabel)
-        loginVStack.addArrangedSubview(loginInput)
-        loginVStack.addArrangedSubview(loginHintLabel)
-        
-        passwordVStack.addArrangedSubview(emailInputLabel)
-        passwordVStack.addArrangedSubview(emailInput)
-        passwordVStack.addArrangedSubview(emailHintLabel)
+        vertStackView.setCustomSpacing(75, after: stateLabel)
     }
     
     private func setViewConstraints() {
+        setLoginConstraints()
+        setEmailConstraints()
+        setVstackConstraints()
         setStateLabelConstraints()
-        setVStackConstraints()
-        setLoginInputConstraints()
-        setPasswordInputConstraints()
-        setSubmitButtonConstraints()
     }
+
+    // MARK: - Setting constraints
     
-    private func setVStackConstraints() {
-        VStack.snp.makeConstraints {
-            $0.left.equalToSuperview().offset(35)
-            $0.right.equalToSuperview().offset(-35)
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
-        }
-    }
+    private func setLoginConstraints() {}
     
-    private func setLoginInputConstraints() {
-        loginInput.snp.makeConstraints {
-            $0.height.equalTo(50)
-        }
-    }
+    private func setEmailConstraints() {}
     
-    private func setPasswordInputConstraints() {
-        emailInput.snp.makeConstraints {
-            $0.top.equalTo(emailInput.snp.bottom).offset(-50)
-            $0.height.equalTo(50)
-        }
-    }
+    private func setStateLabelConstraints() {}
     
-    private func setSubmitButtonConstraints() {
-        submitButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(50)
-        }
-    }
-    
-    private func setStateLabelConstraints() {
-        stateLabel.snp.makeConstraints {
-            $0.top.equalTo(VStack.snp.top).inset(-100)
-            $0.centerX.equalToSuperview()
+    private func setVstackConstraints() {
+        vertStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(100)
+            make.leading.equalToSuperview().offset(30)
+            make.trailing.equalToSuperview().offset(-30)
         }
     }
 }

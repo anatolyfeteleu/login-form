@@ -33,7 +33,8 @@ class MainViewModel {
             .asObservable()
             .map { value in
                 guard let email = value else { return false }
-                return !email.isEmpty && email.count >= 8
+                let emailIsValid = EmailValidator(rawString: email).validate()
+                return !email.isEmpty && emailIsValid
             }
         isFormValid = Observable.combineLatest(isLoginValid, isEmailValid) {
             return $0 && $1
