@@ -1,0 +1,16 @@
+/*
+ Localizable (en).strings
+ FormValidation
+ 
+ Created by Анатолий Фетелеу on 19.04.2023.
+ 
+ */
+
+"incorrectLogin"="Invalid login";
+"incorrectEmail"="Invalid email";
+"loginInputLabelText"="Username: ";
+"loginInputPlaceholder"="Enter the user login";
+"emailInputLabelText"="Email address: ";
+"emailInputPlaceholder"="Enter the email address";
+"submitButtonTitle"="Submit";
+"succeeded"="Success!";
